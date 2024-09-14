@@ -1,36 +1,36 @@
-# Taller: Tienda de Máquinas Arcade
+# Workshop: Arcade Machine Shop
 
-## Descripción
+## Description
 
-Este taller consiste en la creación de un programa en consola para gestionar la compra de máquinas arcade personalizadas. Los clientes pueden elegir el material de la máquina, agregar juegos disponibles en el catálogo a su compra y finalizar la transacción proporcionando su información para la entrega. Además, el programa incluye la funcionalidad para que un administrador pueda añadir nuevos juegos al catálogo, manteniéndolo actualizado con las últimas opciones disponibles.
+This workshop involves creating a console program to manage the purchase of custom arcade machines. Customers can choose the material of the machine, add available games in the catalog to their purchase, and finalize the transaction by providing their information for delivery. Additionally, the program includes the functionality for an administrator to add new games to the catalog, keeping it updated with the latest available options.
 
-## Funcionalidades Principales
+## Main Functionalities
 
-1. **Selección de Materiales:** Permite al cliente elegir el tipo de material de la máquina arcade entre opciones como madera, aluminio y fibra de carbono.
-2. **Catálogo de Juegos:** Muestra la lista de juegos disponibles que pueden ser añadidos a la máquina arcade.
-3. **Añadir Juegos:** Los clientes pueden añadir juegos a su máquina arcade usando un código único para cada juego.
-4. **Finalizar Compra:** Los clientes completan la compra de su máquina arcade y proporcionan la información necesaria para la entrega.
-6. **Gestión del Catálogo por el Administrador:** Permite al administrador añadir nuevos juegos al catálogo para mantenerlo actualizado.
+1. **Material Selection:** Allows the customer to choose the type of material for the arcade machine from options such as wood, aluminum, and carbon fiber.
+2. **Game Catalog:** Displays the list of available games that can be added to the arcade machine.
+3. **Add Games:** Customers can add games to their arcade machine using a unique code for each game.
+4. **Finalize Purchase:** Customers complete the purchase of their arcade machine and provide the necessary information for delivery.
+6. **Administrator Catalog Management:** Allows the administrator to add new games to the catalog to keep it up to date.
 
-## Historias de Usuario
+## User Stories
 
-- **Cliente:** 
-  - Elegir el tipo de material para la máquina arcade.
-  - Ver la lista de juegos disponibles y añadirlos a la máquina utilizando un código.
-  - Completar la compra y proporcionar la información de entrega.
-  - Buscar juegos en el catálogo por categorías.
-- **Administrador:**
-  - Añadir nuevos juegos al catálogo para mantenerlo actualizado.
+- **Customer:**
+- Choose the type of hardware for the arcade machine.
+- View the list of available games and add them to the machine using a code.
+- Complete the purchase and provide delivery information.
+- Search for games in the catalog by category.
+- **Administrator:**
+- Add new games to the catalog to keep it up to date.
 
-## Diseño Orientado a Objetos
+## Object Oriented Design
 
-El programa sigue los principios de la Programación Orientada a Objetos (POO) para lograr una arquitectura modular y escalable. Se han aplicado los principios SOLID para asegurar la mantenibilidad y extensibilidad del sistema. 
+The program follows the principles of Object Oriented Programming (OOP) to achieve a modular and scalable architecture. SOLID principles have been applied to ensure the maintainability and extensibility of the system.
 
-### Clases Principales
+### Main Classes
 
-- **ArcadeMachine:** Gestiona la configuración de la máquina arcade, permitiendo elegir materiales y agregar juegos.
-- **Game:** Representa un juego individual, con detalles como el nombre, categoría, y código único.
-- **GameCatalog:** Gestiona la lista de juegos disponibles, permitiendo buscar por código o categoría.
-- **Customer:** Almacena y gestiona la información del cliente.
-- **PurchaseManager:** Controla el proceso de compra, incluyendo la finalización y resumen de la transacción.
-- **Administrator:** Permite añadir nuevos juegos al catálogo.
+- **ArcadeMachine:** Manages the configuration of the arcade machine, allowing you to choose hardware and add games.
+- **Game:** Represents an individual game, with details such as name, category, and unique code.
+- **GameCatalog:** Manages the list of available games, allowing you to search by code or category.
+- **Customer:** Stores and manages customer information.
+- **PurchaseManager:** Controls the purchasing process, including completion and summary of the transaction.
+- **Administrator:** Allows you to add new games to the catalog.
