@@ -1,0 +1,18 @@
+Date: 2024-09-14 15:47:55.605747
+Customer: Ctis
+Adress: calle
+Phone: 321
+Email: ca
+Arcade machine material: wood
+Games:
+Name: pacman, Category: Arcade, Price: 100
+Total price: 600
+Date: 2024-09-14 15:52:58.421388
+Customer: cristian
+Adress: dfasd
+Phone: 2315
+Email: cscas
+Arcade machine material: wood
+Games:
+Name: mario bros, Category: Adventure, Price: 200
+Total price: 700
