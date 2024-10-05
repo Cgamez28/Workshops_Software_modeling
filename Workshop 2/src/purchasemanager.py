@@ -16,14 +16,11 @@ class PurchaseManager:
         """
         with open("purchase.txt", "a") as file:
             file.write(f"Date: {datetime.now()}\n")
-            file.write(f"Client: {self.client.name}\n")
-            file.write(f"Adress: {self.client.adress}\n")
-            file.write(f"Phone: {self.client.phone}\n")
-            file.write(f"Email: {self.client.email}\n")
+            file.write(f"Client: {self.client._name}\n")
+            file.write(f"Adress: {self.client.__addresses}\n")
+            file.write(f"Phone: {self.client.__phones}\n")
+            file.write(f"Email: {self.client._email}\n")
             file.write(f"Arcade machine material: {self.machine.material}\n")
             file.write("Games:\n")
-            for game in self.machine.games:
-                file.write(f"Name: {game.name}, Category: {game.category}, Price: {game.price}\n")
-            file.write(f"Total price: {self.machine.price}\n")
         
         print("The purchase has been finalized.")

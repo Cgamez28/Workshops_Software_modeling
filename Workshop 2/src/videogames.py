@@ -24,7 +24,7 @@ class VideoGame:
 
     def __init__(self, code: int, name: str, description: str, price: float, category: str, definition: str, 
                  storytelling_creator: str, graphics_creator: str, year: int): 
-        self.code = code
+        self.__code = code
         self.name = name
         self.description = description
         self.price = price
