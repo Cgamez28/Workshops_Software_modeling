@@ -54,7 +54,7 @@ class VideoGamesCatalog:
             code (int): The code of the VideoGame.
         """
         for videogame in self.videogames:
-            if videogame.code == code:
+            if videogame.__code == code:
                 return videogame
         return None
     

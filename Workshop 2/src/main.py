@@ -21,8 +21,8 @@ along with Workshop-SM-UD. If not, see <https://www.gnu.org/licenses/>.
 """
 import sys
 from videogames import VideoGame
-from users import User, Address, Manager, Client
-from machines import Machine, ClasicArcadeFactory, DanceRevolutionFactory, ShootingArcadeFactory, RacingArcadeFactory, VirtualRealityFactory
+from users import User, Manager, Client, Address
+from machines import ClasicArcadeFactory, DanceRevolutionFactory, ShootingArcadeFactory, RacingArcadeFactory, VirtualRealityFactory
 from purchasemanager import PurchaseManager
 from videogamescatalog import VideoGamesCatalog
 
@@ -30,211 +30,170 @@ from videogamescatalog import VideoGamesCatalog
 class Main:
     """This class represents the main behavior of the application."""
 
-    MENU_ADMIN = "1.Add Videogame\n2.Remove Videogame\n3.Exit"
-    MENU_CLIENT = "1. Choose a Machine\n 2. Exit"
-    MENU_CHOOSE_MACHINE = "1. Clasic Arcade Machine\n2. Dance Revolution Machine\n3. Shooting Arcade Machine\n4. Racing Arcade Machine\n5. Virtual Reality Machine\n6. Exit"  
-    
-    def __init__ (self, user: User):
+    MENU_ADMIN = "1. Add Videogame\n2. Remove Videogame\n3. Exit"
+    MENU_CLIENT = "1. Choose a Machine\n2. Buy Machine\n3. Exit"
+    MENU_CHOOSE_MACHINE = ("1. Clasic Arcade Machine\n2. Dance Revolution Machine\n3. "
+                           "Shooting Arcade Machine\n4. Racing Arcade Machine\n5. Virtual Reality Machine\n6. Exit")
+
+    def __init__(self, user: User):
         self.__catalog = VideoGamesCatalog()
         self.__temp_machine = None
-        self.__user: User = user
-    
+        self.__user = user
+
     def show_menu(self):
-        """This method shows the menu according to the user type."""
+        """Show menu based on user type."""
         if isinstance(self.__user, Manager):
             print(Main.MENU_ADMIN)
         elif isinstance(self.__user, Client):
             print(Main.MENU_CLIENT)
-    
+
     def choose_machine(self):
-        """This method allows to choose a machine."""
+        """Allows the client to choose a predefined machine."""
         print(self.MENU_CHOOSE_MACHINE)
-        option = int(input("Choose an option: "))
+        option = int(input("Choose a machine: "))
         if option == 1:
-            self.__temp_machine = ClasicArcadeFactory()
+            return ClasicArcadeFactory()
         elif option == 2:
-            self.__temp_machine = DanceRevolutionFactory()
+            return DanceRevolutionFactory()
         elif option == 3:
-            self.__temp_machine = ShootingArcadeFactory()
+            return ShootingArcadeFactory()
         elif option == 4:
-            self.__temp_machine = RacingArcadeFactory()
+            return RacingArcadeFactory()
         elif option == 5:
-            self.__temp_machine = VirtualRealityFactory()
+            return VirtualRealityFactory()
         else:
-            print("Invalid option")
-        return self.__temp_machine
-    
+            print("Invalid option.")
+            return None
+
     def choose_material(self):
-        """This method allows to choose the material of the machine."""
-        
-        if self.__user._grants['buy_machine']:
-            material = input(
-                "Insert the material of the machine (wood, aluminum or carbon fiber):"
-            )
-        else:
-            print("You do not have permission to choose a material.")
+        """Allows the client to choose the material for the machine."""
+        material = input("Choose the material of the machine (wood, aluminum, carbon fiber): ")
         return material
-    
+
     def show_videogames(self):
-        """This method shows the videogames in the catalog."""
+        """Displays videogames based on the selected machine's category."""
         options = [
-            [isinstance(self.__temp_machine, ClasicArcadeFactory), "Classic"], 
-            [isinstance(self.__temp_machine, DanceRevolutionFactory), "Dance"],
-            [isinstance(self.__temp_machine, ShootingArcadeFactory), "Shooting"],
-            [isinstance(self.__temp_machine, RacingArcadeFactory), "Racing"],
-            [isinstance(self.__temp_machine, VirtualRealityFactory), "Virtual"]
+            (isinstance(self.__temp_machine, ClasicArcadeFactory), "Classic"),
+            (isinstance(self.__temp_machine, DanceRevolutionFactory), "Dance"),
+            (isinstance(self.__temp_machine, ShootingArcadeFactory), "Shooting"),
+            (isinstance(self.__temp_machine, RacingArcadeFactory), "Racing"),
+            (isinstance(self.__temp_machine, VirtualRealityFactory), "Virtual")
         ]
-        for option in options:
-            if option[0]:
-                category = option[1]
+        for option, category in options:
+            if option:
                 videogames = self.__catalog.search_by_category(category)
                 for vg in videogames:
                     print(vg)
-                break
-        else:
-            print("No machine selected.")
-    
-    
-    def choose_videogames(self):
-        """
-        Prompts the user to choose videogame for the arcade machine.
-        Returns:
-            videogame :videogame objects representing the choose videogame.
-        """ 
-        print("Please, choose the videogame for the arcade machine (Enter the code of videogame): ")  
-        videogame_code = int(input())
+                return
+        print("No machine selected.")
 
-        for i in range(len(self.__catalog.videogames)):
-            if videogame_code == self.__catalog.videogames[i].code:
-                videogame = self.__catalog.videogames[i]
-                return videogame
+    def choose_videogames(self):
+        """Prompts the user to choose a videogame for the machine."""
+        videogame_code = int(input("Enter the code of the videogame you want to add: "))
+        videogame = self.__catalog.search_by_code(videogame_code)
+        if videogame:
+            return videogame
         else:
-            print("The videogame is not available.")
+            print("Videogame not available.")
             return None
-    
-    def change_user(self, user: User):
-        """This method changes the current user."""
-        self.__user = user
-    
+
     def create_machine(self):
-        """This method creates a machine."""
-        if self.__user._grants['buy_machine']:
-            material = self.choose_material()
-            option_machine = self.choose_machine()
-            videogame = self.choose_videogames()
-            machine = option_machine.create_machine(material, videogame)
-            print("Machine created successfully.")
+        """Creates a customized machine."""
+        self.__temp_machine = self.choose_machine()
+        if not self.__temp_machine:
+            return None
+
+        material = self.choose_material()
+        videogame = self.choose_videogames()
+
+        if videogame:
+            machine = self.__temp_machine.create_machine(material, [videogame])
+            print("Machine created successfully!")
             return machine
         else:
-            print("You do not have permission to create a machine.")
-           
-            
+            print("Machine creation failed.")
+            return None
+
     def add_videogame(self):
-        """This method adds a videogame to the catalog."""
-        if self.__user._grants['add_videogame']:
-            code = int(input("Insert the code of the videogame:"))
-            name = input("Insert the name of the videogame:")
-            category = input("Insert the category of the videogame:")
-            price = float(input("Insert the price of the videogame:"))
-            self.__catalog.add_videogame(VideoGame(code, name, category, price))
-        else:
-            print("You do not have permission to add videogames.")
-    
+        """Allows the manager to add a videogame to the catalog."""
+        code = int(input("Insert the code of the videogame: "))
+        name = input("Insert the name of the videogame: ")
+        category = input("Insert the category of the videogame: ")
+        price = float(input("Insert the price of the videogame: "))
+        new_game = VideoGame(code, name, "", price, category, "", "", "", 2024)
+        self.__catalog.videogames.append(new_game)
+        print("Videogame added successfully!")
+
     def remove_videogame(self):
-        """This method removes a videogame from the catalog."""
-        if self.__user._grants['remove_videogame']:
-            code = int(input("Insert the code of the videogame:"))
-            response = self.__catalog.search_by_code(code)
-            if response is not None:
-                self.__catalog.remove_videogame(response[0])
-                print("Videogame removed successfully.")
-            else:
-                print(f"Videogame with code {code} is not in the catalog.")
+        """Allows the manager to remove a videogame from the catalog."""
+        code = int(input("Insert the code of the videogame: "))
+        videogame = self.__catalog.search_by_code(code)
+        if videogame:
+            self.__catalog.videogames.remove(videogame)
+            print("Videogame removed successfully!")
         else:
-            print("You do not have permission to remove videogames.")
-    
+            print(f"Videogame with code {code} not found.")
+
     def buy_machine(self):
-        """This method buys a machine."""
-        if self.__user._grants['buy_machine']:
-            purchase_manager = PurchaseManager(self.__user, self. __temp_machine)
+        """Allows the client to finalize the purchase of the machine."""
+        if self.__temp_machine:
+            purchase_manager = PurchaseManager(self.__user, self.__temp_machine)
             purchase_manager.finalize_purchase()
         else:
-            print("You do not have permission to buy a machine.")
-            
-            
-    def __handle_admin(self, option: int):
-        exit_ = False
-        if option == 1:  # add videogame
-            self.add_videogame()
-        elif option == 2:  # remove videogame
-            self.remove_videogame()
-        elif option == 3:  # exit
-            print("Manager view is closing!")
-            exit_ = True
-
-        return exit_
-
-    def __handle_client(self, option: int) -> bool:
-        exit_ = False
-        if option == 1:  # choose machine
-            self.create_machine()
-        elif option == 2:  # buy machine
-            self.buy_machine()
-        elif option == 3:  # exit
-            print("Client view is closing!")
-            exit_ = True
-
-        return exit_
+            print("No machine has been created yet.")
 
     def handle_option(self, option: int) -> bool:
-        """This method handles the option selected by the user.
-
-        Args:
-            option (int): Option selected by the user.
-        """
+        """Handles menu options for both Manager and Client."""
         if isinstance(self.__user, Manager):
-            exit_ = self.__handle_admin(option)
+            if option == 1:
+                self.add_videogame()
+            elif option == 2:
+                self.remove_videogame()
+            elif option == 3:
+                print("Exiting manager view.")
+                return True
         elif isinstance(self.__user, Client):
-            exit_ = self.__handle_client(option)
-        return exit_
-    
-    
+            if option == 1:
+                self.create_machine()
+            elif option == 2:
+                self.buy_machine()
+            elif option == 3:
+                print("Exiting client view.")
+                return True
+        return False
+
 
 def get_user() -> User:
-    """This function gets the user type."""
-    options = "1.Manager/n2.Client/n3.Exit"
+    """Gets the user type (Manager or Client)."""
+    options = "1. Manager\n2. Client\n3. Exit\n"
     type_user = int(input(options))
 
-    while type_user not in [1, 2, 3]:
-        print("Invalid option. Please try again.")
-        type_user = int(input(options))
-
-    user = None
     if type_user == 1:
-        user = Manager(1, "admin", "admin@udistrital.edu.co")
+        return Manager(1, "admin", "admin@udistrital.edu.co")
     elif type_user == 2:
         address = Address("St. Evergreen 123", 110783, "Springfield", "USA")
-        user = Client("Homer Simpson", "dsadas@udistrital.edu.co", "1234567", address)
+        return Client("Homer Simpson", "homer@springfield.com", "1234567", address)
     elif type_user == 3:
         print("Thanks for using the application. Goodbye!")
         sys.exit()
+    else:
+        print("Invalid option.")
+        return None
 
-    return user   
 
 def run():
-    """This function runs the application."""
+    """Runs the application."""
     user = get_user()
     main = Main(user)
 
     while True:
-        while True:
-            main.show_menu()
-            option = int(input("Enter the option:"))
-            if main.handle_option(option):
-                break
+        main.show_menu()
+        option = int(input("Enter your option: "))
+        if main.handle_option(option):
+            break
 
         user = get_user()
-        main.change_user(user)
+        main.__user = user
 
 
 if __name__ == "__main__":
